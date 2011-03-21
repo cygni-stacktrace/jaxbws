@@ -1,4 +1,4 @@
-package se.cygni.stacktrace.jaxb;
+package se.cygni.stacktrace.jaxbws;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -13,7 +13,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import se.cygni.stacktrace.jaxb.UserAccount.Services;
+import se.cygni.stacktrace.jaxbws.UserAccount;
+import se.cygni.stacktrace.jaxbws.UserAccount.Services;
+import se.cygni.stacktrace.jaxbws.UserAccounts;
 
 /** Test case for the JAXB-sample (stacktrace.se). */
 public class JaxbTest {
