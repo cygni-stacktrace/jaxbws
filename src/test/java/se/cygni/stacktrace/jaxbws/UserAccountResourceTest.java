@@ -19,8 +19,6 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
-import com.sun.jersey.json.impl.provider.entity.JSONObjectProvider;
-import com.sun.jersey.json.impl.provider.entity.JSONRootElementProvider;
 
 
 public class UserAccountResourceTest {
