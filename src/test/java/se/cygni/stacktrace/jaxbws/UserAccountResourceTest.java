@@ -27,7 +27,7 @@ public class UserAccountResourceTest {
 
     @BeforeClass
     public static void beforeClass() throws IOException, URISyntaxException {
-        final Map<String, String> initParams = new HashMap<String, String>();
+        Map<String, String> initParams = new HashMap<String, String>();
 
         initParams.put("com.sun.jersey.config.property.packages",
                 "se.cygni.stacktrace.jaxbws");
@@ -44,18 +44,17 @@ public class UserAccountResourceTest {
     public void testXML() throws Exception {
         Client client = Client.create();
         WebResource resource = client.resource("http://localhost:8080/accounts");
-        UserAccounts accountsAfterRoundtrip = resource.accept("application/xml").get(UserAccounts.class);
+        UserAccounts accounts = resource.accept("application/xml").get(UserAccounts.class);
         
-        Assert.assertNotNull(accountsAfterRoundtrip);
-        Assert.assertFalse(accountsAfterRoundtrip.getUserAccount().isEmpty());
-        Assert.assertEquals(2, accountsAfterRoundtrip.getUserAccount().size());
+        Assert.assertNotNull(accounts);
+        Assert.assertFalse(accounts.getUserAccount().isEmpty());
+        Assert.assertEquals(2, accounts.getUserAccount().size());
 
-        final UserAccount accountAfterRoundtrip1 = accountsAfterRoundtrip.getUserAccount().get(0);
-        Assert.assertEquals(1, accountAfterRoundtrip1.getId());
-        Assert.assertEquals("account1@localhost", accountAfterRoundtrip1.getEmail());
-        Assert.assertEquals(2, accountAfterRoundtrip1.getServices().getService()
-                .size());
-        Assert.assertTrue(accountAfterRoundtrip1.getServices().getService().contains("music"));
+        UserAccount account1 = accounts.getUserAccount().get(0);
+        Assert.assertEquals(1, account1.getId());
+        Assert.assertEquals("account1@localhost", account1.getEmail());
+        Assert.assertEquals(2, account1.getServices().getService().size());
+        Assert.assertTrue(account1.getServices().getService().contains("music"));
     }
 
     

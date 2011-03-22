@@ -12,25 +12,24 @@ import se.cygni.stacktrace.jaxbws.UserAccount.Services;
 public class UserAccountResource {
          
     @GET
-    @Produces({"application/xml", "application/json"})
+    @Produces({"application/xml"})
     public UserAccounts getUserAccounts() {
-        final UserAccount account1 = createUserAccount(1, "account1", "account1@localhost", "news", "music");
-        final UserAccount account2 = createUserAccount(2, "account2", "account2@localhost", "news", "sports");
+        UserAccount account1 = createUserAccount(1, "account1", "account1@localhost", "news", "music");
+        UserAccount account2 = createUserAccount(2, "account2", "account2@localhost", "news", "sports");
 
-        final UserAccounts accounts = new UserAccounts();
+        UserAccounts accounts = new UserAccounts();
         accounts.getUserAccount().add(account1);
         accounts.getUserAccount().add(account2);
         return accounts;
     }
     
-    private UserAccount createUserAccount(final int id, final String username, final String email,
-            final String... serviceStrings) {
+    private UserAccount createUserAccount(int id, String username, String email, String... serviceStrings) {
         final UserAccount account = new UserAccount();
         account.setId(id);
         account.setUsername(username);
         account.setEmail(email);
 
-        final Services services = new Services();
+        Services services = new Services();
         services.service = Arrays.asList(serviceStrings);
         account.setServices(services);
         return account;
