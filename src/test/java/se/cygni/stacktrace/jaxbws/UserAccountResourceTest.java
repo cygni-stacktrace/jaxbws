@@ -1,8 +1,6 @@
 package se.cygni.stacktrace.jaxbws;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,23 +19,20 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.container.grizzly.GrizzlyWebContainerFactory;
 
 
-public class UserAccountResourceTest {
-  
-    private static SelectorThread threadSelector;
+public class UserAccountResourceTest { 
+
+    private static SelectorThread server;
 
     @BeforeClass
-    public static void beforeClass() throws IOException, URISyntaxException {
-        Map<String, String> initParams = new HashMap<String, String>();
-
-        initParams.put("com.sun.jersey.config.property.packages",
-                "se.cygni.stacktrace.jaxbws");
-
-        threadSelector = GrizzlyWebContainerFactory.create(new URI("http://localhost:8080/"), initParams);
+    public static void beforeClass() throws Exception {
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("com.sun.jersey.config.property.packages", "se.cygni.stacktrace.jaxbws");
+        server = GrizzlyWebContainerFactory.create(new URI("http://localhost:8080/"), params);
     }
 
     @AfterClass
     public static void afterClass() {
-        threadSelector.stopEndpoint();
+        server.stopEndpoint();
     }
         
     @Test
@@ -46,6 +41,21 @@ public class UserAccountResourceTest {
         WebResource resource = client.resource("http://localhost:8080/accounts");
         UserAccounts accounts = resource.accept("application/xml").get(UserAccounts.class);
         
+        assertAccounts(accounts);
+    }
+    
+    @Test
+    public void testJSON() throws Exception {
+        ClientConfig config = new DefaultClientConfig();
+        config.getClasses().add(JacksonJaxbJsonProvider.class);
+        Client client = Client.create(config);
+        WebResource resource = client.resource("http://localhost:8080/accounts");
+        UserAccounts accounts = resource.accept("application/json").get(UserAccounts.class);
+        
+        assertAccounts(accounts);
+    }
+    
+    public static void assertAccounts(UserAccounts accounts) {
         Assert.assertNotNull(accounts);
         Assert.assertFalse(accounts.getUserAccount().isEmpty());
         Assert.assertEquals(2, accounts.getUserAccount().size());
@@ -54,28 +64,6 @@ public class UserAccountResourceTest {
         Assert.assertEquals(1, account1.getId());
         Assert.assertEquals("account1@localhost", account1.getEmail());
         Assert.assertEquals(2, account1.getServices().getService().size());
-        Assert.assertTrue(account1.getServices().getService().contains("music"));
+        Assert.assertTrue(account1.getServices().getService().contains("music"));        
     }
-
-    
-    @Test
-    public void testJSON() throws Exception {
-        ClientConfig config = new DefaultClientConfig();
-        config.getClasses().add(JacksonJaxbJsonProvider.class);
-        Client client = Client.create(config);
-        WebResource resource = client.resource("http://localhost:8080/accounts");
-        UserAccounts accountsAfterRoundtrip = resource.accept("application/json").get(UserAccounts.class);
-        
-        Assert.assertNotNull(accountsAfterRoundtrip);
-        Assert.assertFalse(accountsAfterRoundtrip.getUserAccount().isEmpty());
-        Assert.assertEquals(2, accountsAfterRoundtrip.getUserAccount().size());
-
-        final UserAccount accountAfterRoundtrip1 = accountsAfterRoundtrip.getUserAccount().get(0);
-        Assert.assertEquals(1, accountAfterRoundtrip1.getId());
-        Assert.assertEquals("account1@localhost", accountAfterRoundtrip1.getEmail());
-        Assert.assertEquals(2, accountAfterRoundtrip1.getServices().getService()
-                .size());
-        Assert.assertTrue(accountAfterRoundtrip1.getServices().getService().contains("music"));
-    }
-
 }

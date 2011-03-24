@@ -12,7 +12,7 @@ import se.cygni.stacktrace.jaxbws.UserAccount.Services;
 public class UserAccountResource {
          
     @GET
-    @Produces({"application/xml"})
+    @Produces({"application/xml", "application/json"})
     public UserAccounts getUserAccounts() {
         UserAccount account1 = createUserAccount(1, "account1", "account1@localhost", "news", "music");
         UserAccount account2 = createUserAccount(2, "account2", "account2@localhost", "news", "sports");
